@@ -32,7 +32,7 @@ self-contained: true
 ## Course material {.smaller}
 
 -   Material of each session provided beforehand as a **zip file**
--   [A website](https://malojan.github.io/2024_intro_r/)
+-   [A website](https://malojan.github.io/introduction-r/)
 -   A Moodle page to upload the exercises.
 
 ## Course validation {.smaller}

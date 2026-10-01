@@ -16,3 +16,6 @@ session06/data/ess8.dta
 # Exercise solutions
 *solution*
 session06/exercice_4.*
+
+# Rendered site (published from the gh-pages branch)
+/docs/

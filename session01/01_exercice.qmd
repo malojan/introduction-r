@@ -5,7 +5,7 @@ date: "2021-09-20"
 format: pdf
 ---
 
-This is the first exercise of the course. The goal is to ensure that you are all able to create a new R project, work with Quarto, import a dataset into RStudio, and submit your exercise in the proper format. It is important to familiarize yourself with this workflow, as you will need to follow similar steps for all subsequent exercises. If you have trouble finding solutions, please refer back to the [course material](https://malojan.github.io/2024_intro_r/) and try to find the answer there.
+This is the first exercise of the course. The goal is to ensure that you are all able to create a new R project, work with Quarto, import a dataset into RStudio, and submit your exercise in the proper format. It is important to familiarize yourself with this workflow, as you will need to follow similar steps for all subsequent exercises. If you have trouble finding solutions, please refer back to the [course material](https://malojan.github.io/introduction-r/) and try to find the answer there.
 
 1.  Create an R project on your computer in the location you want with the name `exercice_01`. This should create a new folder containing an `exercice_01.Rproj` file.
 

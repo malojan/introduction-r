@@ -7,8 +7,8 @@ book:
   subtitle: "Quantitative Methods I"
   author: "Malo Jan"
   date: last-modified
-  repo-url: https://github.com/malojan/2024_intro_r
-  site-url: https://malojan.github.io/2024_intro_r/
+  repo-url: https://github.com/malojan/introduction-r
+  site-url: https://malojan.github.io/introduction-r/
   repo-actions: [edit]
   search: true
   sidebar:

@@ -1,8 +1,8 @@
 # Introduction to R
 
-Course materials for the R lab sessions of the Quantitative Methods I class in the research master's programme in political science at Sciences Po Paris (Fall 2024). The sessions complement Jan Rovny's lectures and take students from their first lines of R code to multiple regression.
+Course materials for the R lab sessions of the Quantitative Methods I class in the research master's programme in political science at Sciences Po Paris (Fall 2023 and Fall 2024). The sessions complement Jan Rovny's lectures and take students from their first lines of R code to multiple regression.
 
-The course is a Quarto book, available online at **[malojan.github.io/2024_intro_r](https://malojan.github.io/2024_intro_r/)**. Each session has its own folder with the chapter, its data and the exercise.
+The course is a Quarto book, available online at **[malojan.github.io/introduction-r](https://malojan.github.io/introduction-r/)**. Each session has its own folder with the chapter, its data and the exercise.
 
 ## Sessions
 
