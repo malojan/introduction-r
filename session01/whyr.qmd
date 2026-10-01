@@ -14,7 +14,7 @@ Another compelling reason for embracing a programming language for quantitative 
 
 Programming languages like R encourage you to write scripts detailing each step of your analysis. This approach renders your process explicit and easily shareable with others, ensuring that identical steps can be followed to reproduce your results. This is crucial as it offers greater transparency regarding the decisions you, as a quantitative researcher, make. Quantitative analysis entails numerous choices, including variable selection, recoding and decisions about retaining or discarding observations. By encapsulating all these processes in code that anyone can review, a sound practice is established. Coding also fosters reflection on the data manipulation process. Reviewing the code of others makes you more critical about their research.
 
-![Rainey et al. ](figures/ps_reproducibility.png)
+![Rainey et al.](figures/ps_reproducibility.png)
 
 ### Computational social sciences
 
@@ -60,6 +60,3 @@ This class teaches you how to use programming for quantitative data analysis. Pr
 If you already have some programming knowledge, you might be familiar with Python, another highly used language. Python is even more versatile and serves as a general-purpose programming language, making it widely popular in various industries. It's especially valuable if you're interested in delving deeper into machine learning, as most of the new advancements in this field are developed using Python.
 
 On the other hand, R boasts a more specialized statistical focus and proves to be extremely efficient for data manipulation and visualization. It also sees more widespread use in the social sciences compared to Python, which is why we're focusing on learning it here. It's worth noting that both languages come with their own set of advantages and limitations, and as you advance in your skills, you'll likely find yourself working with both at some point.
-
-
-

@@ -16,23 +16,23 @@ Every package in the tidyverse (and some others) has a cheatsheet that provides 
 
 ## Online ressources
 
-First, remember that you're not alone in encountering errors in R; many others have faced similar issues before you. Often, they have sought help online. If R gives you an error you don’t understand, it’s likely that someone else has encountered the same issue and discussed it online. Start by checking if others have asked similar questions. Websites dedicated to R programming frequently have solutions from experienced users. Additionally, Google can be a valuable resource. Whether you're trying to accomplish a task (e.g., "how to import a `.dta` file in R") or resolve an error, searching the error message or your query can provide valuable insights.
+First, remember that you're not alone in encountering errors in R; many others have faced similar issues before you. Often, they have sought help online. If R gives you an error you don't understand, it's likely that someone else has encountered the same issue and discussed it online. Start by checking if others have asked similar questions. Websites dedicated to R programming frequently have solutions from experienced users. Additionally, Google can be a valuable resource. Whether you're trying to accomplish a task (e.g., "how to import a `.dta` file in R") or resolve an error, searching the error message or your query can provide valuable insights.
 
 Often, you'll find yourself on a site called [Stackoverflow](https://stackoverflow.com/), a community hub for users of various programming languages. You can often copy and paste the code you find there, but it's important to tweak and adapt it to fit your specific needs. Remember, in the world of programming, it's common for everyone to borrow and adapt code from others. Another helpful resource is the [Rstudio Commmunity](https://community.rstudio.com/). Additionally, the [#rstats](https://twitter.com/search?q=%23rstats&src=hashtag_click) hashtag on Twitter can provide insights and discussions from the R programming community.
 
 ## AI is your friend
 
-Lastly, we've entered the era of generative AI. When coding, Large Language Models, particularly [ChatGPT](https://chat.openai.com/), can swiftly emerge as invaluable allies. By supplying ChatGPT with your errors or seeking guidance for specific coding tasks, you can obtain outstanding results. I strongly suggest incorporating it into your coding journey. However, exercise caution: ChatGPT might sometimes suggest non-existent functions or present inaccurate information.  It isn’t a magic bullet, but you can quickly assess the accuracy of its suggestions by testing the code in R. If the code doesn’t work correctly, the information may be incorrect. For instance, check out this example [example](https://chat.openai.com/share/2ec0e8d3-905e-458b-b0c1-c21e7d0abf69) where I asked ChatGPT to explain how to import a Stata file in R.
+Lastly, we've entered the era of generative AI. When coding, Large Language Models, particularly [ChatGPT](https://chat.openai.com/), can swiftly emerge as invaluable allies. By supplying ChatGPT with your errors or seeking guidance for specific coding tasks, you can obtain outstanding results. I strongly suggest incorporating it into your coding journey. However, exercise caution: ChatGPT might sometimes suggest non-existent functions or present inaccurate information. It isn't a magic bullet, but you can quickly assess the accuracy of its suggestions by testing the code in R. If the code doesn't work correctly, the information may be incorrect. For instance, check out this example [example](https://chat.openai.com/share/2ec0e8d3-905e-458b-b0c1-c21e7d0abf69) where I asked ChatGPT to explain how to import a Stata file in R.
 
 ## Most common errors
 
-Finally, some errors are really common and you will probably face them often. I provide you here a (non exhaustive) list of those to help you troubleshooting[^0106_help-1].
+Finally, some errors are really common and you will probably face them often. I provide you here a (non exhaustive) list of those to help you troubleshooting[^help-1].
 
-[^0106_help-1]: I rely on many blogposts, [here](https://statsandr.com/blog/top-10-errors-in-r/), [here](https://warin.ca/posts/rcourse-howto-interpretcommonerrors/), [here](https://www.r-bloggers.com/2016/06/common-r-programming-errors-faced-by-beginners/), [here](https://epirhandbook.com/en/common-errors.html), [here](https://bookdown.org/yih_huynh/Guide-to-R-Book/trouble.html) and [here](https://blog.revolutionanalytics.com/2015/03/the-most-common-r-error-messages.html)
+[^help-1]: I rely on many blogposts, [here](https://statsandr.com/blog/top-10-errors-in-r/), [here](https://warin.ca/posts/rcourse-howto-interpretcommonerrors/), [here](https://www.r-bloggers.com/2016/06/common-r-programming-errors-faced-by-beginners/), [here](https://epirhandbook.com/en/common-errors.html), [here](https://bookdown.org/yih_huynh/Guide-to-R-Book/trouble.html) and [here](https://blog.revolutionanalytics.com/2015/03/the-most-common-r-error-messages.html)
 
 #### Syntax errors
 
-Many errors beginners encounter in R stem from syntax issues: a slight coding mistake can lead RStudio to misunderstand your intentions. Common errors include typos in function names or forgetting symbols like `)`, `,`, or `"`. For example, if you missed a closing `"` when trying to subset the `Abascal` string from the `candidates` vector: `candidates[candidates == "Abascal]`, you'd likely see a + in the console. This indicates that R is awaiting further input to process your command.
+Many errors beginners encounter in R stem from syntax issues: a slight coding mistake can lead RStudio to misunderstand your intentions. Common errors include typos in function names or forgetting symbols like `)`, `,`, or `"`. For example, if you missed a closing `"` when trying to subset the `Le Pen` string from the `leaders` vector: `leaders[leaders == "Le Pen]`, you'd likely see a + in the console. This indicates that R is awaiting further input to process your command.
 
 #### The "not found" errors
 
@@ -87,4 +87,3 @@ leaders
 class(leaders)
 mean(leaders)
 ```
-

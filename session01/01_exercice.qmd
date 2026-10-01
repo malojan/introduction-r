@@ -1,0 +1,46 @@
+---
+title : "Exercise 1"
+author: "Malo Jan"
+date: "2021-09-20"
+format: pdf
+---
+
+This is the first exercise of the course. The goal is to ensure that you are all able to create a new R project, work with Quarto, import a dataset into RStudio, and submit your exercise in the proper format. It is important to familiarize yourself with this workflow, as you will need to follow similar steps for all subsequent exercises. If you have trouble finding solutions, please refer back to the [course material](https://malojan.github.io/2024_intro_r/) and try to find the answer there.
+
+1.  Create an R project on your computer in the location you want with the name `exercice_01`. This should create a new folder containing an `exercice_01.Rproj` file.
+
+2.  Create a quarto document with the title "Exercise 1", your name as author, click on PDF format, uncheck "Use visual Markdown Editor", and click on "Create an empty document". Save the file in the same folder as `lastname_ex1.qmd.` Visit this [link](https://r4ds.hadley.nz/quarto.html) if you need help with Quarto.
+
+3.  Insert a new code chunk and print out your working directory to make sure your R session is launched in the project you've created. The last part of the path displayed should correspond to the project name `exercice_01`.
+
+4.  Add a new code chunk and find a way to import the [Quality of Government environmental indicators](https://www.gu.se/en/quality-government/qog-data/data-downloads/environmental-indicators-dataset) dataset into Rstudio in `.dta` format (stata) format.
+
+5.  Once the data has been imported, read the documentation and use functions to get a sense of the structure of the dataset and answer the following questions :
+
+-   What is this dataset about ?
+-   What is the unit of analysis for this dataset ?
+-   Find a way to calculate the mean of the variable `wdi_fossil` and write a sentence to interpret the result.
+-   Assign the mean of the variable wdi_fossil to a new object called `mean_fossil` and print it out.
+
+6.  Render your quarto document in a pdf format and upload it on moodle by following these instructions :
+
+-   Make sur `format: pdf` is displayed in the YAML below your name in the quarto document.
+-   Render the quarto document using the Render blue button on the top left of the Rstudio window.
+-   Upload the pdf file on moodle.
+
+Depending on your operating system, you might encounter issues with the pdf rendering. If this is the case, try one of the following :
+
+-   Make sur your code works and does not contain any errors. If you have an error in your code, the pdf rendering will not work. If you cannot fix the error, it is possible to override the error by adding `#| error: true` in the code chunk such as :
+
+```{r}
+#| echo: fenced
+#| error: true
+
+this_will_not_work
+
+```
+
+-   Install the `tinytex` package by running `tinytex::install_tinytex()` in the console, restart Rstudio and try to render the document again.
+-   Render the document in word format by changing the `format` in the YAML to `docx` and upload the word file on moodle.
+-   Render the document in html format by changing the `format` in the YAML to `html` and upload the html file on moodle.
+-   Upload the `.qmd` file on moodle.

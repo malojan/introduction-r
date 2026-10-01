@@ -1,0 +1,52 @@
+---
+title: "Introduction to data visualization"
+author: "Malo Jan"
+incremental: true
+format: revealjs
+self-contained: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Why data visualization ?
+
+1.  Exploration and description
+2.  Communication
+3.  Aesthetics
+
+## What makes a bad visualization ?
+
+1. Aesthetics : ugly
+2. Substantive : wrong
+3. Perceptual : bad
+
+## Ugly charts
+
+![](figures/ugly.png){fig-align="center"}
+
+## Wrong charts
+
+![](figures/wrong.png){fig-align="center"}
+
+## Perceptual : Forget about pie charts (the so-called "camemberts") {.smaller}
+
+-   One of the first graphs that comes in our mind when we think about dataviz
+-   If you have already done that once, it will not happen again
+-   We want to understand relative sizes but humans are bad at judging angles
+-   Use barcharts instead : humans are better at judging bar lengths (William Cleveland)
+
+## Bar charts instead of pie charts
+
+::: {layout-nrow="2"}
+![](figures/pie_chart.png){width="600" fig-align="center"}
+
+![](figures/bar_chart.png){width="600" fig-align="center"}
+:::
+
+## Many more caveats
+
+-   Colors that communicates nothing
+-   Cutting Y axis
+-   More caveats [here](https://www.data-to-viz.com/caveats.html)
+
+

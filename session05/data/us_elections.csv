@@ -1,0 +1,18 @@
+year,incumbent_margin,income_growth,incumbent,candidate_winner,candidate_loser,party_incumbent,winner_incumbent,party_winning,tenure
+1948,4.48,4.67,Truman,Truman,Dewey,Democrat,TRUE,Democrat,16
+1952,-10.85,2.42,Stevenson,Eisenhower,Stevenson,Democrat,FALSE,Republican,20
+1956,15.4,0.54,Eisenhower,Eisenhower,Stevenson,Republican,TRUE,Republican,4
+1960,-0.17,-0.15,Nixon,Kennedy,Nixon,Republican,FALSE,Democrat,8
+1964,22.58,3.35,Johnson,Johnson,Goldwater,Democrat,TRUE,Democrat,4
+1968,-0.7,1.36,Humphrey,Nixon,Humphrey,Democrat,FALSE,Republican,8
+1972,23.15,2.49,Nixon,Nixon,McGovern,Republican,TRUE,Republican,4
+1976,-2.06,1.26,Ford,Carter,Ford,Republican,FALSE,Democrat,8
+1980,-9.74,-0.96,Carter,Reagan,Carter,Democrat,FALSE,Republican,4
+1984,18.21,2.85,Reagan,Reagan,Mondale,Republican,TRUE,Republican,4
+1988,7.72,1.24,Bush Sr,Bush Sr,Dukakis,Republican,TRUE,Republican,8
+1992,-5.56,0.57,Bush Sr,Clinton B,Bush Sr,Republican,FALSE,Democrat,12
+1996,8.51,1.32,Clinton B,Clinton B,Dole,Democrat,TRUE,Democrat,4
+2000,0.51,1.57,Gore,Bush Jr,Gore,Democrat,FALSE,Republican,8
+2004,2.46,1.19,Bush Jr,Bush Jr,Kerry,Republican,TRUE,Republican,4
+2008,-7.27,-0.79,McCain,Obama,McCain,Republican,FALSE,Democrat,8
+2012,3.84,0.32,Obama,Obama,Romney,Democrat,TRUE,Democrat,4

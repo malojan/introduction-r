@@ -1,0 +1,78 @@
+---
+title : "Group graded exercise - Quantitative Methods 1"
+author: ""
+format: pdf
+number-sections: true
+---
+
+This document outlines the guidelines for the last graded exercise in the quantitative methods course. This exercise revisits operations covered since the first session and presupposes that you have attended all lectures and lab sessions, as well as completed the between-session exercises. Moreover, it assumes that you are now autonomous enough to find solutions in R for problems you have not previously encountered. Additionally, it assumes that you have organized yourselves into groups to distribute the workload, engage in discussions about your ideas, and collectively submit a single response for the exercise.
+
+You should have received an email containing a zip file with an R project for this exercise, these guidelines, the data you will need to use, and a document called `homework.qmd`, where you should complete the exercise. Please read these guidelines in full before you start to understand what you need to fill in for each part of the exercice. The exercise assumes that the working directory is set to the project directory. Additionally, make sure to load the required package every time you use a function.
+
+To submit your exercise, you will need to update the document header with your names as authors. After that, you should render the document to PDF or Word format and upload it to Moodle, **within a period of three weeks after receiving these instructions**. Upload only one document per group. 
+
+For this exercice, you will work with two different datasets. The first one is a subset of the data used in the paper by Dimiter Toshkov, Kutsal Yesilkagit and Brendan Carroll, "Government Capacity, Societal Trust or Party Preferences? What Accounts for the Variety of National Policy Responses to the COVID-19 Pandemic in Europe?" (unpublished, 2020). The second one is a subset of the European Social Survey round 9, which was conducted in 2018-2019. The data are available in the `data` subfolder of the project directory.
+
+\newpage
+
+# Part 1: Predicting Covid-19 lockdowns (8 points)
+
+In the data folder, you will find Toshkov et al.'s dataset, which contains information about the first case of Covid-19 in 30 European countries, as well as the dates of school closures and national lockdowns. As there is no documentation for this dataset, you will need to figure out what each variable means by looking at the data or at the paper.
+
+## Import the dataset (0.5)
+
+## Recoding variables (2)
+
+Find a way to create two variables, `till_schools` and `till_lockdown`, measuring the number of days between the first case of Covid-19 in the country and the occurrence of school closures (`till_schools`) and national lockdowns (`till_lockdown`). Hint -- You can use the `lubridate` package to work with dates.
+
+## Descriptive measures (3)
+
+Report your code and answer for the following measures :
+
+-   Number of countries where school closure occurred before national lockdown
+-   Correlation between time to school closure and time to national lockdown
+-   Correlation between time to national lockdown and population
+
+## Linear relationship (1.5)
+
+Predict the number of days from the first case of Covid-19 to a national lockdown from the natural logarithm of the population. Interpret the regression results.
+
+## Diagnose a linear regression model (1)
+
+According to the model that you just wrote, in which country is population size least predictive of time to national lockdown ? Hint -- Another way to phrase the question is: what country corresponds to the least well predicted data point in your model?
+
+# Part 2 : Predicting religious attendance (12 points)
+
+## Import the ESS round 9 dataset (0.5)
+
+## Recode variables (3)
+
+Find the variables below in the ESS documentation and recode them as instructed below :
+
+-   Age. Should not be modified
+-   Gender.  Should be coded as a dummy where women are coded "Female" and men are coded "Male"
+-   Employment relationship should be modified, and thus coded employee for 1, self-employed for 2 and working for own family business for 3.
+-   Marital status should be recoded into three groups, as follows: -- legally married or in a civil union -- separated, divorced or widowed -- none of those (never married or else)
+-   Subjective income ("Feeling about household's income nowadays") should not be modified, and should thus contain 4 ordered response items.
+-   Religious attendance (`rlgatnd`) should be recoded from 0 for "never" to 6 for "every day"
+
+## Multiple linear regression (5)
+
+Using the variables created in the previous section, predict religious attendance from age, sex, employment relationship, marital status and subjective income. Include an interaction between sex and marital status, in order for your model to include coefficients those predictors as well as for their product. Hint -- In R, the kind of interaction described above is obtained by writing x1 \* x2 in your regression formula, where x1 and x2 are your two predictors. (1)
+
+Display your results in a regression table. (1)
+
+Interpretation of the results : answer yes or no to the following statements, and briefly explain your answer in each case.
+
+-   Females report higher religious attendance than males, independently of age, employment status, marital status or subjective income. (1)
+
+-   Does the model support the view that economic insecurity increases religious attendance? (1)
+
+-   How do you interpret the interaction in the model? (1)
+
+### (Multiple) Multiple linear regression (3.5)
+
+Run the same model for every country in the dataset. Hint -- You can use `tidyr::nest()` and `purrr::map()` to do this. (1.5)
+
+-   In which country does age have the strongest effect on religious attendance? (1)
+-   In which country does the model have the highest predictive power? (1)

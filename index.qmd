@@ -1,6 +1,6 @@
 # Course overview {.unnumbered}
 
-This website contains all the material for the lab sessions of the Quantitative Methods class for the Fall 2025 semester in the [research master's program in Political Science](https://www.sciencespo.fr/ecole-recherche/fr/formations/masters/master-science-politique/) at Sciences Po Paris. The class complements Jan Rovny's lecture on [Quantitative Methods I](https://www.rovny.org/methods-ed).
+This website contains all the material for the lab sessions of the Quantitative Methods class for the Fall 2024 semester in the [research master's program in Political Science](https://www.sciencespo.fr/ecole-recherche/fr/formations/masters/master-science-politique/) at Sciences Po Paris. The class complements Jan Rovny's lecture on [Quantitative Methods I](https://www.rovny.org/methods-ed).
 
 The course provides you with the fundamentals, resources, and motivation to further your learning independently, prepare for the next semester [Luis Sattelmayer's R sessions](https://luissattelmayer.github.io/quanti-2024/), and apply quantitative methods in your future research.
 
@@ -23,13 +23,13 @@ Throughout the semester, you will complete four individual exercises between ses
 
 Second, at the end of the semester, you will complete a bigger group exercise with one other person. This exercise will involve integrating content from throughout the semester and will be completed within a two-week timeframe. It will be graded on a scale from 0 to 20 points.
 
-| Assignments | Description | Due date                  | Weight |
-|-------------|-------------|---------------------------|--------|
-| Exercise 1  | Individual  | Before session 2          | 5%     |
-| Exercise 2  | Individual  | Before session 3          | 5%     |
-| Exercise 3  | Individual  | Before session 4          | 5%     |
-| Exercise 4  | Individual  | before session 5          | 5%     |
-| Exercise 5  | Group       | Two weeks after session 6 | 10%    |
+| Assignments | Description | Due date                | Weight |
+|-------------|-------------|-------------------------|--------|
+| Exercise 1  | Individual  | 7 days after Session 1  | 5%     |
+| Exercise 2  | Individual  | 7 days after Session 2  | 5%     |
+| Exercise 3  | Individual  | 7 days after Session 3  | 5%     |
+| Exercise 4  | Individual  | 7 days after Session 4  | 5%     |
+| Exercise 5  | Group       | 14 days after session 6 | 10%    |
 
 ## Requirements
 

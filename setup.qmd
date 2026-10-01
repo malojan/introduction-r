@@ -27,7 +27,13 @@ RStudio has some default settings that are worth changing to adopt best practice
 While R provides a series of basic commands for data manipulation, many of the functionalities we will use come from **packages** that need to be installed and loaded via RStudio. The most well-known package we will use is called `tidyverse`. To check if your installation is successful and you are ready to start the course, copy-paste the following code into the console pane and press enter. It might take a few minutes, and at the end, you should see the same message as the one below.
 
 ```{r}
+#| eval: false
 if (!require(tidyverse)) {install.packages("tidyverse")}
+```
+
+```{r}
+#| echo: false
+suppressWarnings(library(tidyverse))
 ```
 
 ## Installation issues
@@ -39,6 +45,7 @@ If you do not see the message above, welcome in the world of troubleshooting! De
 If a message appears saying that the package cannot be found, try the following :
 
 ```{r}
+#| warning: false
 if (!require(tidyverse)) {devtools::install_github("hadley/tidyverse")}
 ```
 

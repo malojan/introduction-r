@@ -1,0 +1,41 @@
+---
+title : "Exercise 2"
+author: "Malo Jan"
+format: pdf
+editor_options: 
+  chunk_output_type: inline
+---
+
+This is the second exercise of the course. The goal is to practice data manipulation tasks that you may need to perform when you find datasets online that you want to analyze.
+
+# Set up
+
+-   Create an R project on your computer in the location you want with the name `exercice_02`. This should create a new folder containing an `exercice_02.Rproj` file.
+
+-   Create a quarto document with the title "Exercise 2", your name as author, click on PDF format, uncheck "Use visual Markdown Editor", and click on "Create an empty document". Save the file in the same folder as `lastname_ex2.qmd.`
+
+# Import data
+
+-   Download the constituency results of the General British General Elections for both [2019](https://commonslibrary.parliament.uk/research-briefings/cbp-8749/) and [2017](https://commonslibrary.parliament.uk/research-briefings/cbp-7979/) in csv format and import them into R. For each dataset, create a new variable called year to indicate the year of the election.
+-   What is the unit of analysis for these datasets?
+
+
+
+
+
+
+# Manipulate data
+
+-   Combine the two datasets into a single dataset called `elections.`
+
+-   Install the janitor package (in the console, not in the Quarto document!) and use the `clean_names()` function on the dataset to tidy up messy variable names.
+
+-   Determine the number of seats won by the Conservatives between 2017 and 2019, and the number of seats lost by Labour during the same period (*hint*: Use the `first_party` variable to identify the winning party in each constituency).
+
+-   Recode the `member_gender` variable so that both "F" and "Female" are recoded to "F", and both "M" and "Male" are recoded to "M". How many men and women were elected in 2019?
+
+-   Convert the dataset into a longer format, consolidating all party variables into a single column along with their corresponding vote shares.
+
+-   Create a new variable, `vote_share`, that calculates the percentage of votes received by each party in each constituency.
+
+-   In which constituency did UKIP receive the highest vote share in 2019?

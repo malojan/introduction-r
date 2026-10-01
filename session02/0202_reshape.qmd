@@ -1,8 +1,9 @@
 # Reshaping data
 
-The analysis of your data is usually not the most time-consuming part of your project; data wrangling is. Your data must be cleaned before it can be analyzed. This means having a *tidy* dataset, where each variable is a column, each observation is a row, and each cell contains a single value. Sometimes, the datasets you find are not tidy, and you will need to reshape them. In other cases, you may encounter datasets organized differently, representing the same data in a less useful format for analysis. Here, we focus on how to combine and reshape different datasets to use them properly. I will use polling data from various political parties. 
+The analysis of your data is usually not the most time-consuming part of your project; data wrangling is. Your data must be cleaned before it can be analyzed. This means having a *tidy* dataset, where each variable is a column, each observation is a row, and each cell contains a single value. Sometimes, the datasets you find are not tidy, and you will need to reshape them. In other cases, you may encounter datasets organized differently, representing the same data in a less useful format for analysis. Here, we focus on how to combine and reshape different datasets to use them properly. I will use polling data from various political parties.
 
 ```{r warning=FALSE, message=FALSE}
+#| warning: false
 library(tidyverse)
 
 german_polls <- read_csv("data/german_polls.csv")
@@ -13,7 +14,7 @@ german_polls <- read_csv("data/german_polls.csv")
 Datasets can be in long (many rows, few columns) or wide formats (few rows, many columns). Depending on our unit of analysis, we can reshape our datasets into different formats. In the `german_polls dataset`, the vote intentions for each party are stored in different columns. However, we could also structure the data with one column for parties and another for voting intention.
 
 ```{r}
-(german_long <- german_polls |>
+german_long <- german_polls |>
   pivot_longer(
     # Select which columns to pivot
     cols = c(Union, FDP, LINKE, SPD, PIRATEN, AfD, GRUENE),
@@ -21,39 +22,38 @@ Datasets can be in long (many rows, few columns) or wide formats (few rows, many
     names_to = "party",
     # Choose a name for the new column with the vote intentions
     values_to = "intention"
-  ))
+  )
 
-(german_intentions <- german_long |> 
+german_long
+```
+
+```{r}
+german_long |> 
   group_by(date, party) |> 
-  summarise(intention = mean(intention, na.rm = T)))
-
+  summarise(intention = mean(intention, na.rm = T))
 ```
 
 We can also reshape the dataset to put it back on wide format.
 
 ```{r warning=FALSE, message=FALSE}
-(german_wide <- german_long |> 
+german_wide <- german_long |> 
   pivot_wider(
     names_from = party,
     values_from = intention
   ) |> 
-  unnest())
+  unnest()
 
-
-# How many times the Greens have been higher in the polls than SPD ? 
-german_wide |> 
-  mutate(left = GRUENE > SPD) |> 
-  count(left)
+german_wide
 ```
 
 ## Combining with bind_rows
 
-Now I want to combine this data from Germany with the same data from the spanish case.
+In many cases, you want to combine datasets having the same structure and mostly the same variables but different observations (rows). It may be the same data from different years, different countries etc. Here, I want to combine the data I have on Germany with similar data on spanish polls. To do so, I first, import this dataset and convert it also to a long format.
 
 ```{r warning= FALSE}
 spain_polls <- read_csv("data/spanish_polls.csv")
 
-(spain_polls <- spain_polls |>
+spain_long <- spain_polls |>
   pivot_longer(
     # Select which columns NOT to pivot
     cols = -c(date, firm, date_from, sample_size),
@@ -61,46 +61,22 @@ spain_polls <- read_csv("data/spanish_polls.csv")
     names_to = "party",
     # Choose a name for the new column with the vote intentions
     values_to = "intention"
-  ))
+  )
 
-
+spain_long
 ```
 
-I also add a country variable to add information on the country of the two datasets.
+My goal now is to combine them together. But before, I add a country variable on the two datasets to keep track of which country the data is from.
 
 ```{r}
-spain_long <- spain_polls |> mutate(country = "Spain")
+spain_long <- spain_long |> mutate(country = "Spain")
 german_long <- german_long |> mutate(country = "Germany")
-
 ```
 
-And combine the two with `bind_rows()`
+Now, I combine the two datasets with the bind_rows function that comes from the dplyr package. The functions allows you to combine two datasets with the same structure by stacking them on top of each other. The resulting dataset will have all the rows from the first dataset, followed by all the rows from the second dataset. The datasets will be combined by columns, so the columns must have the same names and types.
 
 ```{r}
 polls <- bind_rows(spain_long, german_long)
 ```
 
-```{r warning=FALSE, message=FALSE}
 
-polls |> 
-  filter(party %in% c("AfD", "PP", "Union", "VOX")) |> 
-  ggplot(aes(date, intention, color = party, group = party)) +
-  geom_smooth(se = F) +
-  facet_wrap(~ country)
-```
-
-## Going further
-
-```{r}
-polls |> 
-  # Compute the mean of voting intention for each party/date
-  summarise(intention = mean(intention, na.rm = T), .by = c(country, date, party)) |> 
-  # Compute party ranking for each date
-  mutate(rank = row_number(-intention), .by = date) |>
-  # Keep only the party that leads the polls
-  filter(rank == 1) |> 
-  # Count how manu times each party arrived first
-  count(rank, party, sort = T)
-```
-
-- https://r4ds.hadley.nz/data-tidy

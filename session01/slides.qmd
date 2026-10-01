@@ -6,10 +6,14 @@ format: revealjs
 self-contained: true
 ---
 
-## Outline of the course
+## The goals of this class {.smaller}
 
--   Presentation of the course
--   R basics
+- Lab sessions of the quantitative methods class taught by J. Rovny
+- Gain practical experience applying quantitative methods using programming
+- We will learn to import, manipulate, clean, visualize data, compute descriptive statistics and run statistical models
+- Programming : instructing computers to perform specific tasks by writing code using programming languages (such as Python, Java, C++ or...R)
+- R : free, open-source, widely used in social sciences, reproducible
+- Teach you the basics, give you the willigness to learn more by yourself and prepare for Quant 2 and use of quantitative methods in your future research
 
 ## About Your Instructor {.smaller}
 
@@ -18,78 +22,28 @@ self-contained: true
 -   Research focus: Political Parties, Political Behavior, and Climate Politics
     -   And... I'm quite passionate about data science and all of the (fun and unexpected) things we can do with R nowadays
 
-## The goals of this class {.smaller}
-
--   Lab sessions of the quantitative methods class taught by J. Rovny
--   Gain practical experience applying quantitative methods using R and RStudio
--   Teach you the basics, give you the willigness to learn more by yourself and prepare for Quant 2 and use of quantitative methods in your future research
-
 ## Prerequisites {.smaller}
 
--   This class is designed for complete beginners in R and require no programming knowledge
--   But... you have very different backgrounds and knowledge
--   Begginers : No need to feel intimidated; we are here to learn. Ask questions if I am moving too quickly.
--   Advanced students : Feel free to request additional resources to go further and assist others.
-
-## Course structure {.smaller}
-
-| Session   | Description                              | Date |
-|-----------|-------------------------------|------------|
-| Session 1 | Getting started with R and Rstudio       |  05/09, 12/09   |
-| Session 2 | Manipulating and describing data         |  19/09, 26/09    |
-| Session 3 | Visualizing data                         |  03/10, 10/10    |
-| Session 4 | Testing relationships                    |  17/10, 24/10    |
-| Session 5 | Correlation and simple linear regression |  07/11, 14/11   |
-| Session 6 | Multivariate analysis                    |  21/11, 28/11    |
-
+-   This class is designed for complete beginners in R and require no programming knowledge but willingness to learn and practice
+- Different backgrounds :
+  - Begginers : please ask questions if I am moving too quickly
+  - Advanced students : feel free to request additional resources to go further 
 
 ## Course material {.smaller}
 
 -   Material of each session provided beforehand as a **zip file**
--   [A website](https://malo-jn.quarto.pub/introduction-to-r/)
+-   [A website](https://malojan.github.io/2024_intro_r/)
 -   A Moodle page to upload the exercises.
 
-## Course validation
+## Course validation {.smaller}
 
-| Assignments | Description | Due date | Weight |
-|-------------|-------------|------|--------|
-| Exercise 1  | Individual  |  Before session 2   |  5%   |
-| Exercise 2  | Individual  |  Before session 3   |  5%   |
-| Exercise 3  | Individual  |  Before session 4   |  5%   |
-| Exercise 4  | Individual  |  before session 5   |  5%   |
-| Exercise 5 | Group  |  Two weeks after session 6  |  10%   |
-
-## What is programming useful for {.smaller}
-
--   Programming is the act of instructing computers to perform specific tasks by writing code using programming languages (such as Python, Java, C++ or...**R**)
--   Why should we doing this as social scientists ?
-    -   Collect, manipulate, reshape and clean data
-    -   Visualize data by creating beautiful plots
-    -   Computing descriptive statistics (such as mean, median, crosstabs..)
-    -   Analyse data through statistical modelling
-    -   And many other things...
-
-## Why R {.smaller}
-
-- Different programming languages and software to do data analysis :
-  - Excel, SAS, STATA, SPSS, Python
-- R is : 
-  - Free unlike SAS, STATA, SPSS which are expensive
-  - Important community of users, incorporation of new tools
-  - Widely used in social sciences
-  - Reproducibility : use of programming code to document the analysis, unlike excel
-  - Computational social sciences : proliferation of digital data, increasing computational power, advances in AI
-  
-## Programming is both useful for qual and quant research {.smaller}
-
--   Programming is commonly linked with quantitative research because automation is really helpful when we have large datasets
--   Programming can be intimidating for more qualitative researcher but...a few reasons to learn those skills
-
-    1. Gain knowledge of what others are doing, trends in the field
-    2. Allow yourself to be surprised (.eg unexpected datasets on your topic)
-    3. Contextualizing qualitative data (eg. Plots and descriptives)
-    4. Collecting data (eg. web scraping)
-    5. Formatting data (eg. OCR, transcription algorithms such as Whisper)
+| Assignments | Description | Due date                | Weight |
+|-------------|-------------|-------------------------|--------|
+| Exercise 1  | Individual  | 7 days after Session 1  | 5%     |
+| Exercise 2  | Individual  | 7 days after Session 2  | 5%     |
+| Exercise 3  | Individual  | 7 days after Session 3  | 5%     |
+| Exercise 4  | Individual  | 7 days after Session 4  | 5%     |
+| Exercise 5  | Group       | 14 days after session 6 | 10%    |
 
 # 
 

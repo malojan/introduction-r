@@ -1,14 +1,15 @@
 project:
   type: book
   output-dir: docs
-  # execute-dir: file
 
 book:
   title: "Introduction to R"
   subtitle: "Quantitative Methods I"
   author: "Malo Jan"
   date: last-modified
-  # repo-url: https://github.com/malojan/intro_r
+  repo-url: https://github.com/malojan/2024_intro_r
+  site-url: https://malojan.github.io/2024_intro_r/
+  repo-actions: [edit]
   search: true
   sidebar:
     collapse-level: 3
@@ -22,19 +23,27 @@ book:
         - session01/basics.qmd
         - session01/help.qmd
     - part: "Manipulating and describing data"
+      chapters:
+        - session02/0201_manipulate.qmd
+        - session02/0202_reshape.qmd
     - part: "Visualizing data"
+      chapters:
+        - session03/03_dataviz.qmd
     - part: "Testing relationships"
+      chapters:
+        - session04/04_relationships.qmd
     - part: "Regression analysis"
+      chapters:
+        - session05/correlation_regression.qmd
     - part: "Multivariate analysis"
+      chapters:
+        - session06/06_modelling.qmd
 
 bibliography: references.bib
 
 format:
   html:
-    theme: 
-    - cosmo
-    - style.css
-    callout-appearance: simple
+    theme: cosmo
     code-block-background: true
     code-block-border-left: "#31BAE9"
     highlight-style: pygments
@@ -52,6 +61,4 @@ format:
   pdf:
     documentclass: scrreprt
 
-
-editor: visual
-
+editor: source

@@ -1,23 +1,30 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
 # Manipulating data
 
-At this point, you can set up an R project, import a data file into RStudio, and quickly explore the dataset's structure, which is typically the first step in any analysis. If the dataset is well-structured, the next crucial step is to manipulate the data in R to obtain the information we need. Often, we're not interested in the entire dataset; instead, we focus on selecting specific variables, analyzing certain groups, and observing how these variables vary across those groups
+At this point, you can set up an R project, import a data file into RStudio, and quickly explore the dataset's structure, which is typically the first step in any analysis. If the dataset is well-structured, the next crucial step is to manipulate the data in R to obtain the information we need. Often, we are not interested in the entire dataset; instead, we focus on selecting specific variables, analyzing certain groups, and observing how these variables vary across those groups
 
 With R, there are several ways to perform these operations. Firstly, you can use R's base functions, without having to load a specific package. An alternative approach is based on the `tidyverse`, the package suite developed by [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham) with a special syntax. Here, we'll concentrate on the `tidyverse` functions, which I feel are easier and more intuitive to use.
 
-The `tidyverse` relies extensively on what is called "the pipe" : `|>`. You will quickly understand what the pipe is, we use it to chain instructions just as in a recipe. Depending on the version of R, you might also use/see this `%>%`.
-
 ## Introduction to dplyr functions
 
-To manipulate data, we will use a package from the tidyverse called `dplyr`, comprising a comprehensive suite of exceptionally useful functions. To familiarize ourselves with its usage, we will explore the [Quality of Government Environmental Indicators](gu.se/en/quality-government/qog-data/data-downloads/environmental-indicators-dataset) dataset. To do this, we will need first to load the tidyverse and import the data with the `haven` package. Note here that I use the `::` to specify the package from which the function is called, and this allows me to avoid loading the entire package.
+To manipulate data, we will use a package from the tidyverse called `dplyr`, comprising a comprehensive suite of exceptionally useful functions. To familiarize ourselves with its usage, we will explore the [Quality of Government Environmental Indicators](gu.se/en/quality-government/qog-data/data-downloads/environmental-indicators-dataset) dataset. To do this, we will need first to load the tidyverse and import the data with the `haven` package.
 
 ```{r}
+#| warning: false
 # Load the tidyverse
 
 library(tidyverse) 
+library(haven)
 
-qog <- haven::read_dta("data/qog_env.dta") 
+qog <- read_dta("data/qog_env.dta") 
 
 head(qog)
+
 ```
 
 ### Count the observations of groups with `count()`
@@ -26,14 +33,17 @@ One basic operation in data manipulation is to count the number of observations 
 
 In Exercise 1, we observed that the qog dataset has a country-year structure. For each country, there is a series of indicators, with one value per year. The dataset includes a `year` variable and a `cname` variable representing the country.
 
+We might want to know how many country observations we have for each year. To do this, we can use `count()` with the `year` variable, that will give us the number of observations for each year. If we look at the results, we see that the dataset has observations from 1946 to 2020 with an increasing number of countries in the dataset over time.
+
 ```{r}
-qog |> # This is a pipe
-  count(year)
+count(qog, year)
+table(qog$year) # Alternative way to do it
+```
 
-table(qog$year) # Alternative way to do it but the result is less nice
+If we want to cross the `year` and `cname` variables, we can use the `count()` function with both variables. This will give us the number of observations for each year and country. In this case, we see that we have only one observation for each country-year combination.
 
-qog |> 
-  count(year, cname) # Only one country-year observation
+```{r}
+count(qog, year, cname)
 ```
 
 ### `filter()` observations
@@ -56,77 +66,35 @@ We may want to use only a subset of countries and get a smaller versions of the 
 For instance, I might be only interested in environmental indicators for France. In that case I could filter the whole dataset with only the observations that has France as country variable.
 
 ```{r}
-qog |> filter(cname %in% c("France", "Afghanistan"))
+filter(qog, cname == "France")
 
-qog |> 
-  filter(cname != "France") 
+# If I want to keep all the countries except France
+filter(qog, cname != "France") 
+
+# Filter for multiple countries
+filter(qog, cname %in% c("France", "Norway", "Spain", "Denmark"))
+
+# Filter for countries and year and save in a new object ! 
+qog_subset <- filter(qog, cname %in% c("France", "Norway", "Spain", "Denmark"), year > 1990)
+
+count(qog_subset, cname)
 ```
 
-Here, see that the tidyverse functions are a bit intuitive that what you could do directly with R base functions. To do the same, here an example of what we would have done :
+Often however, we need several operations to be done together. To do so with the tidyverse functions, we can use something that is called the pipe : `|>`. You will quickly understand what the pipe is, we use it to chain instructions just as in a recipe. Depending on the version of R, you might also use/see this `%>%`. The shortcut for it is `Ctrl + Shift + M` or `Cmd + Shift + M` on Mac.
 
-```{r}
-qog[qog$cname %in% c("France"), ]
-```
-
-You could also filter by all of the countries that are NOT France and count how many observations we have for each.
+Let's say we want to count the number of observations we have on the variable `wvs_pedp` that measure the share of the population participating in environmental protests for Sweden. We can use the pipe to do it by chaining the `filter()` and `count()` functions rather than doing it separately in different steps.
 
 ```{r}
 qog |> 
-  # Keep only countries that are not France
-  filter(cname != "France") |> 
+  # Keep only countries 
+  filter(cname == "Sweden") |> 
   # Count the number of observations for each country
-  count(cname, sort = TRUE) # Use Sort = TRUE if you want to sort the results
+  count(wvs_pedp) # Use Sort = TRUE if you want to sort the results
 ```
 
-Or you could try with a few countries. In that case, you can use `%in%`.
+### Your turn
 
-```{r}
-qog |>
-  filter(
-    cname %in% c(
-      "France",
-      "Norway",
-      "Spain",
-      "Denmark")) |> 
-  count(cname)
-```
-
-But we also want to store the data to manipulate it and so it is easier to create an object.
-
-```{r}
-
-(qog_subset <- qog |>
-   # Keep only the following countries
-  filter(
-    cname %in% c(
-      "France",
-      "Norway",
-      "Spain",
-      "Denmark",
-      "Netherlands",
-      "Poland",
-      "Russia",
-      "Saudi Arabia",
-      "India"
-    ),
-    # Keep only the observations that are after 1990
-    year > 1990
-  ))
-```
-
-## Subset rows with `slice()`
-
-You can also subset rows by their positions using `slice()`.
-
-```{r}
-
-qog_subset |> slice(5:7) # Subset only rows 5 to 7
-qog_subset |> slice(-1) # Remove the first row
-
-qog_subset |> slice_max(wdi_co2, n = 5) # Get the n max results of a variable
-qog_subset |> slice_min(wdi_co2, n = 3) # Get the n min results of a variable
-
-```
+Count the countries and year where the share of the population participating in environmental protests was greater than 10 (measured by the `wvs_pedp` variable).
 
 ## `select()` variables
 
@@ -139,83 +107,30 @@ qog_subset |>
   select(cname, year,  wdi_co2)
 ```
 
-The `select()` functions offer a lot of possibilities to select variable based on certain patterns by adding functions inside such as `starts_with()`, `ends_with()`, `contains()`. You can learn more by typing `?select`.
-
-```{r}
-colnames(qog_subset)
-
-qog_wdi <- qog_subset |> 
-  # Select the country, the year and every variable that starts with wdi. 
-  select(cname, year, starts_with("wdi"))
-
-# Look at which columns we have in our dataset
-
-qog_wdi |> colnames()
-
-# Select all of the variable that do not starts with wdi
-
-qog_wdi |> select(-starts_with("wdi")) |> colnames()
-
-# Select column by position (from 1 to 5)
-
-qog_wdi |> select(1:5) |> colnames()
-
-qog_wdi |> colnames()
-
-qog_wdi |> 
-  # Select only the variables that have numeric as type
-  select_if(is.character) |> 
-  # Look at which columns we have in our dataset
-  colnames()
-```
-
-## Change column names with `rename()`
-
-Occasionally, you may encounter datasets with columns named in a non-meaningful manner, such as v5, x45, or Q234, often representing variable identifiers from surveys. To enhance the understanding of the variables' meanings, it can prove beneficial to rename these columns using the rename() function. In our current dataset, the variable names are already quite informative. However, for the purpose of this illustration, let's rename the 'cname' variable as 'country', offering a more explicit label.
-
-```{r}
-qog_renamed <- qog_wdi |> 
-  # Rename the variable cname as country
-  rename(country = cname) 
-
-qog_renamed |> 
-  colnames()
-```
-
 ## Calculating statistics by group with `group_by()` and `summarise()`
 
 To compute a first set of descriptive statistics, we could look at the central indicators of the co2 emissions variable (`wdi_co2`).
 
 ```{r}
 
-mean(qog_wdi$wdi_co2, na.rm = TRUE) # Compute the mean
-median(qog_wdi$wdi_co2, na.rm = TRUE) # Compute the median
-sd(qog_wdi$wdi_co2, na.rm = TRUE) # Compute the standard deviation
-quantile(qog_wdi$wdi_co2, na.rm = T) # Compute the quantiles
+mean(qog_subset$wdi_co2, na.rm = TRUE) # Compute the mean
+median(qog_subset$wdi_co2, na.rm = TRUE) # Compute the median
+sd(qog_subset$wdi_co2, na.rm = TRUE) # Compute the standard deviation
 ```
 
 However, we are often interested in how these indicators vary across groups such as country or year. To do so, use the `summarise()` function in R that allows you to compute new variables by groups. To choose grouping variable, we use first `group_by()` where we specify for which group we want to compute something. Here I use this function to compute the mean, the median, the standard deviation and the first and third quartile of co2 emissions per capita for each country. This gives us a new tibble with all of the summary information.
 
 ```{r}
-(qog_stats <- qog_wdi |> 
+qog_stats <- qog |> 
    group_by(cname) |> 
   summarise(mean_co2 = mean(wdi_co2, na.rm = TRUE), 
             median_co2 = median(wdi_co2, na.rm = TRUE),
-            sd_co2 = sd(wdi_co2, na.rm = TRUE),
-            q1 = quantile(wdi_co2, 0.25, na.rm = TRUE),
-            q3 = quantile(wdi_co2, 0.25, na.rm = TRUE)))
+            sd_co2 = sd(wdi_co2, na.rm = TRUE))
 
+qog_stats
 ```
 
-To get nice tables when you render your quarto document, you can use the `knitr::kable()` function.
-
-```{r}
-#| output: asis 
-
-qog_stats |> knitr::kable()
-```
-
-It is also possible to sort the results to gain a clearer idea of which countries have the highest average CO2 emissions per capita. To achieve this, we utilize the `arrange()` function, specifying the variable by which we intend to sort. By doing so, we observe that, on average, Saudi Arabia, Russia, and the Netherlands possess the highest carbon footprint per capita among the selected countries.
+It is also possible to sort the results to gain a clearer idea of which countries have the highest average CO2 emissions per capita. To achieve this, we utilize the `arrange()` function, specifying the variable by which we intend to sort.
 
 ```{r}
 qog_stats |> 
@@ -225,21 +140,16 @@ qog_stats |>
   arrange(mean_co2)
 ```
 
-Now I want to know when emissions per capita levels were the lowest in Saudia Arabia. I can filter only this country, select the variables of interest and sort the dataframe. We observe that the CO2 emissions per capita were at their minimum towards the late 1990s (which is not good).
+## Your turn
 
-```{r}
-qog_wdi |> 
-  filter(cname == "Saudi Arabia") |> 
-  select(cname, year, wdi_co2) |> 
-  arrange(wdi_co2)
-```
+When were the CO2 emissions per capita the lowest in Saudi Arabia?
 
 ### Mutate
 
 We can also create new variables based on other ones with `mutate()`. Let's say I want to compute the growth rate of co2 emissions per capita every year. For this, I will use `mutate()` to create new variables.
 
 ```{r}
-qog_wdi |> 
+qog |> 
   select(cname, year, wdi_fossil) |> 
   mutate(dataset = "QOG dataset")
 ```
@@ -248,10 +158,13 @@ To compute the growth rate, we need for each year the emissions per capita of th
 
 ```{r}
 
-qog_wdi <- qog_wdi |>
+qog_co2_growth <- qog |>
+  filter(cname == "France") |>
   select(cname, year, wdi_co2) |> 
   mutate(co2_lag = lag(wdi_co2),
         co2_growth = (wdi_co2 - co2_lag) / co2_lag*100)
+
+qog_co2_growth 
 ```
 
 ## Recode values with `case_when`
@@ -259,41 +172,20 @@ qog_wdi <- qog_wdi |>
 `Mutate()` is also widely used to recode variable. Here we create a new `trajectory` variable and we use `case_when()` to recode whether there co2_emissions are growing or not for a given year.
 
 ```{r}
-qog_wdi <- qog_wdi |> 
+qog_co2_growth <- qog_co2_growth |> 
+  filter(cname == "France") |>
   mutate(
     trajectory = case_when(
       co2_growth > 0 ~ "Bad",
       co2_growth < 0 ~ "Good"
     )
   )
+qog_co2_growth
 
-qog_wdi |> 
+qog_co2_growth |> 
   count(trajectory)
 ```
 
-## Small exercice
+### Your turn !
 
-Find the countries that are the most affected by natural disasters (hint : look at the variables starting with `emdat`)
-
-## Going further
-
-```{r}
-# More complex ! 
-
-qog_renamed <-  qog_renamed |> 
-  # Remove wdi_ from all of the variables names that starts with wdi
-  rename_with(~ str_remove(.x, "wdi_"), starts_with("wdi")) 
-
-qog_renamed |> colnames()
-
-```
-
-We can also compute descriptive statistics on several variables at the same time with the `across()` function.
-
-```{r}
-qog_growth <- qog_wdi |> 
-  group_by(cname) |> 
-  summarise(across(c(wdi_co2, wdi_fossil),~ mean(.x, na.rm = T)))
-
-qog_growth
-```
+Create a century variable that indicates whether the year is in the 20th or 21st century. Find the countries that have the highest total number of deaths due to natural disasters for each century, as measured by the `emdat_ndeath` variable.

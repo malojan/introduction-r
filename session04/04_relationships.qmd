@@ -1,0 +1,351 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Testing relationships
+
+In social sciences, our primary interest lies in understanding how certain variables vary across different groups. This session focuses primarily on bivariate relationships. When analyzing data, our objective often is to measure the association between two variables. For example, are men more likely to vote for radical right parties than women? Do autocratic regimes engage in warfare more frequently than democracies? Do individuals with more information tend to hold stronger beliefs in the reality of climate change than those without? In this context, we focus solely on relationships, not causality. Investigating causality would entail understanding the exact nature of the relationship and accounting for other variables that may influence this association.
+
+When examining these relationships, our primary concern is statistical inference. Typically, our analysis is based on a sample taken from the population under study, meaning that our results are contingent on this specific sample. However, our ultimate goal is to make general statements or draw conclusions about the larger population. To determine whether the observed association in our data can be generalized, we need to conduct statistical tests. Our sample gives us an estimate of the "true" population relationship, and statistical tests assess how confident we can be that the association we observe is not simply due to sampling variability. By performing these statistical tests, we can make more reliable inferences about the broader population based on the sample we have analyzed.
+
+We aim to determine whether the relationship observed in the data is real or merely the result of random chance. To do this, we formulate a null hypothesis: that the observed relationship is due to random chance. Typically, we seek to reject this null hypothesis and provide evidence for our alternative hypothesis that this effect is not random. To achieve this, we conduct a statistical test that yields a p-value: the probability of observing an association at least as strong as the one in our data if the null hypothesis were true.
+
+To explore how to do this in R, we will use data from the 2022 French electoral study. This dataset was collected following the last French presidential election and contains variables on voting behavior. Before testing the relationship between different variables, I will cover various data wrangling steps that are often necessary before analyzing the data, such as joining data frames, recoding variables, and managing missing values.
+
+## Joining datasets
+
+In many instances, we encounter data originating from different datasets that share common variables. In this context, I have two datasets concerning French voters. The first dataset is an annual survey that comprises information regarding the socio-demographic characteristics of the respondents. The second dataset is a panel survey conducted during the most recent presidential election, providing data about the voting choices of the respondents. Both datasets pertain to the same individuals and include a unique identifier (UID) that enables us to correlate the two datasets. Our objective is to amalgamate these two datasets into a single one that encompasses both the socio-demographic characteristics and the voting choices of the respondents. To accomplish this, we must merge the two datasets. Note that this is different from binding datasets together as we already did before with `bind_rows()` where we binded datasets having the same columns but not the same observations.
+
+Let's start by loading a bunch of packages we will use today and the two datasets I just described.
+
+```{r}
+#| warning: false
+# Load packages (install.packages("package_name") if you don't have them installed yet
+
+library(tidyverse)
+library(janitor)
+library(haven)
+library(labelled)
+library(broom)
+library(infer)
+
+
+# Load the data
+
+fes <- read_dta("fes2022v4bis.dta")
+
+annual <- read_dta("elipss_annual.dta")
+```
+
+To join them together, we will use the `left_join()` function from the `dplyr` package. This function is used to combine two datasets by matching the values of one or more variables in each dataset. The first dataset is the one that we want to keep all the observations from. The second dataset is the one that we want to add observations from. In our case, we want to keep all the observations from the fes dataset and add the variables from the annual dataset. The `by` argument specifies the variable(s) that will be used to match observations in the two datasets. In our case, we will use the `UID` variable that is common to both datasets.
+
+```{r}
+fes2022 <- left_join(fes, annual, by = c("UID")) # Join the two datasets by the UID variable
+```
+
+The `left_join()` function is indeed one of the most commonly used methods for joining data in R. However, it's important to note that there are several other types of joins that can be applied, each with its own specific use case. If you'd like to delve deeper into how these joins work, I recommend checking out the[R for data science book's](https://r4ds.hadley.nz/joins.html) explanation of these concepts. These diagrams below shows the different types of joins that can be performed with the `dplyr` package.
+
+![](https://r4ds.hadley.nz/diagrams/join/venn.png)
+
+If we check the names of our columns, we can now see that we have in our new dataset, the columns of both previous datasets with the same number of observations.
+
+```{r}
+colnames(fes2022)
+```
+
+## Renaming variables
+
+Our examination of the column names also reveals that the variable names are not particularly informative. It can be challenging to discern the specific information represented by each variable. Today, I am interested in the relationship between education levels and voting behavior in the second round of the election. So I rename these two variables with more informative names. I also rename other variables on sympathy towards candidates that I will use late.
+
+```{r}
+fes2022 <- fes2022 |>
+  rename(
+    gender = cal_SEXE, # Gender variable
+    education = cal_DIPL, # Education variable
+    vote_t2 = fes4_Q10p2_b, # Vote at the second round of the election
+    symp_macron = fes4_Q17a, # Sympathy towards Macron 
+    symp_lepen = fes4_Q17d, # Sympathy towards Le Pen (Far right)
+    symp_zemmour = fes4_Q17b, # Sympathy towards Zemmour (Far right)
+    symp_melenchon = fes4_Q17c, # Sympathy towards Mélenchon (Radical left)
+    symp_jadot = fes4_Q17f # Sympathy towards Jadot (Greens)
+  )
+```
+
+## Recoding variables
+
+In addition to renaming variables, we may also need to recode variables. Let's look at these two variables. Education is coded in four different categories but the actual values are numbers from 1 to 4 and we migh want a categorical variable with the labels instead. Moreoever, I also want to change the order of the categories to have the less educated people first and the more educated people last.
+
+```{r}
+fes2022 |> 
+  count(education)
+
+fes2022 <- fes2022 |>
+  mutate(
+    # Convert the education variable values by their labels
+    education = unlabelled(education) |>
+      # Change the order of the categories
+      fct_relevel(
+        "Sans diplôme et non déclaré",
+        "CAP + BEPC",
+        "BAC et BAC+2",
+        "Diplôme supérieur"
+      )
+  )
+fes2022 |> 
+  count(education)
+
+```
+
+Our vote variable at the second round is also coded with values from 1 to 4. We might want to recode it to have the names of the candidates instead of numbers, and to have a single category for the people who did not cast a valid vote.
+
+```{r}
+fes2022 |> 
+  count(vote_t2)
+
+# Recode vote_t2
+fes2022 <- fes2022 |>
+  mutate(
+    # Create a new variable called candidate_t2
+    candidate_t2 = case_when(
+      # When vote_t2 is 1, assign the value "Le Pen"
+      vote_t2 == 1 ~ "Le Pen",
+      # When vote_t2 is 2, assign the value "Macron"
+      vote_t2 == 2 ~ "Macron",
+      # When vote_t2 is 3 or 4, assign the value "No valid vote"
+      vote_t2 %in% c(3, 4) ~ "No valid vote"
+    )
+  )
+
+fes2022 |> 
+  count(vote_t2)
+```
+
+## Dealing with Nas
+
+In the last code chunk, it became evident that our "vote" variable contains a considerable number of missing values Before we go further, I want to take a moment to discuss how to deal with missing values. Initially, it's advisable to obtain an overview of the extent of missing values within our dataset.
+
+```{r}
+sum(is.na(fes2022)) # Count the total number of missing values in the dataset
+```
+
+We see that we actually have a lot of missing values. This is because some of the variables are only asked to a subset of the respondents. There are several ways to deal with it depending on what you want to do :
+
+-   Removing Nas
+-   Converting values to Nas
+-   Replacing Nas
+
+First, in some instances, we might want to consider to remove all of the observations that have Nas. You can do that by using `tidyr::drop_na()` on the whole dataset. But be careful with this ! You might lose a lot of information. Here, we actually end up with 0 observations because all of our observations have missing values in at least one variable.
+
+```{r}
+# Drop all of the observations that have missing values
+fes_without_nas <- fes2022 |> 
+  drop_na()
+
+# Drop all of the observations that have missing values in the variable symp_macron
+
+fes_without_nas <- fes2022 |> 
+  drop_na(symp_macron)
+```
+
+Then, we might want to convert some values to Nas. We can do that by using the `dplyr::na_if()` function. Here, for instance, I have a variable `symp_macron` containing information on sympathy towards Emmanuel Macron. The value 96 corresponds to "I don't know him". The problem with keeping this value is that it is not a missing value and it will be included in the analysis. For instance, if I compute a mean on this variable, the value 96 will be included in the computation.
+
+```{r}
+fes2022 |> count(symp_macron)
+
+mean(fes2022$symp_macron, na.rm = TRUE)
+```
+
+To avoid this, we can convert the value 96 to NA with `na_if()`. As we can see, the value 96 is now considered as a missing value and is not included in the computation of the mean that is now 4.51.
+
+```{r}
+fes_recoded <- fes2022 |> 
+  mutate(symp_macron = na_if(symp_macron, 96))
+
+fes_recoded |> count(symp_macron)
+
+mean(fes_recoded$symp_macron, na.rm = TRUE)
+```
+
+You can also automate this with the `mutate_at()` function. Here, I convert all of the values 96 in the variables starting with "symp" to NAs.
+
+```{r}
+# Automation on all of the candidates
+
+fes2022 <- fes2022 |> 
+  mutate_at(vars(starts_with("symp")), ~na_if(., 96))
+
+```
+
+Finally, we might want to replace Nas with other values. For instance the vote for the secound round variable has missing values as some people did not vote or refused to answer. I might want to keep those values and replace them by another value. Here I decide to code them as well as "No valid vote" which will contains all of the people that did not cast a valid vote (Macron or Le Pen). We can do that by using the `tidyr::replace_na()` function.
+
+```{r}
+fes2022 |> 
+  count(candidate_t2)
+
+fes2022 <- fes2022 |> 
+  mutate(candidate_t2 = replace_na(candidate_t2, "No valid vote"))
+
+fes2022 |> 
+  count(candidate_t2)
+```
+
+If you want to delve deeper into the topic of missing values, I recommend you to read [this](https://r4ds.hadley.nz/missing-values). Also, note that there are other ways to deal with missing values. For instance, you can use imputation techniques to replace missing values by plausible values.
+
+## Relationships between two categorical variables : χ² test
+
+Let's look a the relatiohship between two variables : education and voting choice at the second round of the 2022 presidential election. We want to know if there is a relationship between these two variables. We can then formulate the following hypotheses :
+
+H0 (null hypothesis) : There is NO relationship between education levels and voting choice
+
+H1 : There is a relationship between education levels and voting choice
+
+To look at the plausible relationship between these two variables, we can create a contingency table (or crosstab). Here I use the`janitor::tabyl()` function. But you can also use the `table()` function from base R. These table show the distribution of voting choice for each level of education.
+
+```{r}
+# Create a contingency table
+fes2022 |> 
+  tabyl(candidate_t2, education)
+
+# Format the table to add totals and percentages
+
+contingency_table <- fes2022 |> 
+  tabyl(candidate_t2, education) |> # Create a contingency table
+  adorn_totals("row") |>  # Add totals as last row 
+  adorn_totals("col") |>  # Add totals as last column
+  adorn_percentages() |> # Convert to percentages
+  adorn_pct_formatting(digits = 1) |>  
+  adorn_ns()  
+
+contingency_table
+
+# Alternative way with base R 
+
+table(fes2022$candidate_t2, fes2022$education) # Create a contingency table
+prop.table(table(fes2022$candidate_t2, fes2022$education), 1)
+```
+
+From this table, we can already see that the vote choice vary across education level. The total shows us what would be the distribution of voting choice if there was no relationship between education and voting choice. But we can see that voters with higher education have voted more for Macron than for Le Pen and that the opposite is true for voters with lower education. But is this difference statistically significant or does it reflect sampling error ?
+
+To test this, we need to compute a test statistic. As we ar dealing with two categorical variables, we will use a `χ²` test. This test is used to test the relationship between two categorical variables by comparing the observed distribution of our values to their expected distribution if there was no relationship between the two variables. To do this in R, we can use the `chisq.test()` function. By default, the significance level is set at 0.05.
+
+```{r}
+test_educ <- chisq.test(fes2022$candidate_t2, fes2022$education)
+
+test_educ
+```
+
+This gives us several informations :
+
+-   The X-squared value, which is our test statistic. It is computed by comparing the observed values to the expected values. You can access them with `broom::augment()`. Expected values are the values that we would expect if there was no relationship between the two variables. They are computed by multiplying the row total by the column total and dividing by the grand total. Ex, for Le Pen and less educated : 270\*108/1575 = 18.51. If there was no relationship between education and voting choice, we would expect about 18.5 people without a diploma to vote for Le Pen, and we observe 29.
+
+```{r}
+augmented_test <- augment(test_educ)
+
+augmented_test
+```
+
+```{r}
+# Compute chi2 value
+
+chi2_value <- sum((augmented_test$.observed - augmented_test$.expected)^2 / augmented_test$.expected)
+chi2_value
+```
+
+We use the conventional significance level of 0.05: we reject the null hypothesis if the p-value is below 0.05. The p-value is the probability of observing a test statistic as extreme or more extreme than the one we observed if the null hypothesis is true. It is computed from the X-squared value and the degrees of freedom of the χ² distribution. Here, the p-value is 5.757e-12, which is equivalent to 0.000000000005757. This means that if there was no relationship between education and voting choice in the population, we would observe an association at least this strong in our sample only 0.0000000005757% of the time. So we can reject the null hypothesis and conclude that there is a statistically significant relationship between education and voting choice.
+
+Using the `infer` package, we can also visualize how far is our observed statistic from the distribution of statistics under the null hypothesis.
+
+```{r}
+# calculate the observed statistic
+
+observed_indep_statistic <- fes2022 |> 
+  specify(candidate_t2 ~ education) |>
+  hypothesize(null = "independence") |> 
+  calculate(stat = "Chisq")
+
+# calculate the null distribution
+null_dist_sim <- fes2022 |>
+  drop_na(candidate_t2) |>
+  specify(candidate_t2 ~ education) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "Chisq")
+
+# Visualize the null distribution and shade the observed statistic
+null_dist_sim |> 
+  visualize() +
+  shade_p_value(observed_indep_statistic,
+                direction = "greater")
+```
+
+## Relationship between a categorical and a continuous variable : t-test
+
+Thus far, we have examined the relationship between two categorical variables. However, there are instances when we are interested in assessing how various groups vary in terms of their values on a continuous variable. For this, we can use a t-test, which is a statistical test that allows us to compare the means of two groups. The t-test is used to test the null hypothesis that there is no difference between the means of the two groups. The alternative hypothesis is that there is a difference between the means of the two groups. Our goal is to reject the null hypothesis.
+
+Here, I want to know whether men and women tend to have different levels of sympathy towards far right candidates.
+
+H0 : There is no difference between gender in terms of sympathy towards far right candidates.
+
+H1 : There is a difference between gender in terms of sympathy towards far right candidates.
+
+```{r}
+fes2022 |> 
+  count(symp_zemmour)
+
+fes2022 |>
+  count(symp_lepen)
+
+fes2022 |>
+  count(gender)
+```
+
+```{r}
+# Recode gender
+
+fes2022 <- fes2022 |>
+  mutate(
+    gender = unlabelled(gender)
+  )
+
+fes2022 |> 
+  count(gender)
+```
+
+```{r}
+# Compute the mean
+
+fes2022 |>
+  group_by(gender) |>
+  summarise(
+    n = n(),
+    mean_symp_zemmour = mean(symp_zemmour, na.rm = TRUE),
+    mean_symp_lepen = mean(symp_lepen, na.rm = TRUE)
+  )
+```
+
+We can test this statistically by using a t.test that will tell us if the difference in means between the two groups is statistically significant. To do so, we use the `t.test()` function that takes as input the two variables we want to compare with a `~` in between and the data where it comes from. Here, we want to compare sympathy towards Marine Le Pen between men and women. So, we put the `symp_lepen` variable on the left of the `~` and the `gender` variable on the right.
+
+```{r}
+test_lepen <- t.test(fes2022$symp_lepen ~  fes2022$gender)
+
+test_lepen
+```
+
+The t-value is our test statistic. It is computed by comparing the difference between the two means to the variability within the groups. The closer the t-value is to 0, the more similar the two groups are. By default, `t.test()` runs a Welch t-test, which does not assume that the two groups have the same variance. Its degrees of freedom are estimated from the data (here 1553.9), which is why they are not a whole number. The formula `df = n1 + n2 - 2` only applies to the classic Student t-test, which you get with `var.equal = TRUE`. The p-value is the probability of observing a test statistic as extreme or more extreme than the one we observed if the null hypothesis is true. Based on this critical value and the t-value, the t-table gives us that p-value. Here, the p-value is 0.6952 This means that if there was no difference between the two groups in the population, we would observe a difference at least as large as the one in our sample 69.52% of the time. So we cannot reject the null hypothesis: there is no statistically significant difference between men and women in terms of sympathy towards Marine Le Pen. Note that this does not prove that there is no difference in the population, only that our data do not provide evidence of one.
+
+```{r}
+test_zemmour <- t.test(fes2022$symp_zemmour ~  fes2022$gender)
+
+test_zemmour
+```
+
+The p-value is 1.13e-06. This means that if there were no difference between the two groups in the population (H0), we would observe a difference at least as large as the one in our sample only 0.000113% of the time. Therefore, we can reject the null hypothesis and conclude that there is a statistically significant difference between the two groups, as the p-value is well below our significance level of 0.05.
+
+While there are no statistically significant differences between women and men in terms of sympathy towards Marine Le Pen, there is a statistically significant difference between women and men regarding sympathy towards Eric Zemmour. Men tend to be more sympathetic towards Eric Zemmour than women.
+
+# Your turn
+
+-   Is there a statistically significant difference between gender and the level of other candidates ?
+-   Is there a statistically significant difference between gender and voting choice at the second round ?

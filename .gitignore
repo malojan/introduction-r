@@ -4,3 +4,15 @@
 .Ruserdata
 
 /.quarto/
+.DS_Store
+*.zip
+
+# Data that cannot be redistributed (see README)
+session04/fes2022v4bis.dta
+session04/elipss_annual.dta
+**/ESS9e03_1.dta
+session06/data/ess8.dta
+
+# Exercise solutions
+*solution*
+session06/exercice_4.*

@@ -86,9 +86,11 @@ coalition_seats
 ```
 
 We use vectors to store different values because it is possible to perform the same operation on all the values of a vector at once. Let's say we want to know the number of seats that an existing coalition would need to have an absolute majority in the parliament. We can do this by creating a new object, `majority`, that stores the number of seats needed for an absolute majority, and then subtracting the number of seats obtained by the different coalitions from this value. The result will be a vector showing the number of seats each coalition needs to reach an absolute majority, which we could also store in a new object if desired.
- 
+
 ```{r}
 majority <- 577/2 + 0.5 # Half of the number of seats (577) + 0.5 to round up (there is no half MP)
+
+majority 
 
 majority - coalition_seats
 ```
@@ -108,6 +110,246 @@ As for other vectors, you can combine them in a single vector which will return 
 leaders <- c(left_leaders, far_right_leaders)
 leaders
 ```
+
+
+
+::: callout-note
+## Your turn !
+
+Create a vector that contains the names of the leaders of the Macron's party : Attal, Fesneau, Marcangeli. Then, add this vector to the `leaders` vector and store the result in a new object `all_leaders`. 
+
+<details>
+
+<summary>Solution. Click to expand!</summary>
+
+Solution:
+
+```{r}
+macron_leaders <- c("Attal", "Fesneau", "Marcangeli")
+all_leaders <- c(leaders, macron_leaders)
+```
+
+</details>
+:::
+
+## Functions
+
+To manipulate vectors and conduct operations on them, we use **functions**. A function is a reusable block of code that performs a specific task, it takes several input values called *arguments* and produce an *output*. Let's say you want to know how many seats parliamentary groups have on average in the French parliament. You could calculate the sum of the seats and dividing them by their number. But you could also just the `mean()` function that exists in R and that takes a vector of numbers as argument.
+
+```{r}
+parl_seats <- c(communists_seats, greens_seats, socialists_seats, lfi_seats, renaissance_seats, modem_seats, horizon_seats, conservatives_seats, ciotti_seats, rn_seats, none_seats, liot_seats)
+
+mean(parl_seats) # Compute the mean of the vector parl_seats
+
+```
+
+It is also easy to use functions to compute the maximum, minimum, and sum of a vector of numbers.
+
+```{r}
+max(parl_seats) # Compute the maximum of the vector parl_seats
+min(parl_seats) # Compute the minimum of the vector parl_seats
+sum(parl_seats) # Compute the sum of the vector parl_seats
+```
+
+
+## Missing values
+
+In R, a missing value is represented by the symbol `NA`, which stands for "Not Available." Missing values can arise for a variety of reasons, such as data not being observed or recorded, errors in data collection, or intentional omissions. Understanding and handling missing values is crucial because they can influence the results of your analysis or even cause some functions to return errors. For instance, imagine I haven't found any information about the number of seats one parliamentary group get, but I want to retain this information in my vector. So, I add an NA to it.
+
+```{r}
+parl_seats <- c(parl_seats, NA)
+parl_seats
+```
+
+When analyzing data, it's not uncommon to encounter NA values, and it's important to be aware of them. To check if a vector contains NA values, you can use the `is.na()` function. This function will returns what is called a *logical vector* that is a sequence of values where each element is either (`TRUE`) or not (`FALSE`). Logical vectors are often used to represent conditions or logical statements. 
+
+```{r}
+is.na(parl_seats) # Check which values of a vector are NAs
+```
+
+This is important because certain functions will not operate properly if there are NA values in your data. For instance, the `mean()` function will return NA if the data contains any NA values
+
+```{r}
+mean(parl_seats)
+```
+
+To deal with `NA`, the `mean()` function has a `na.rm`
+
+```{r}
+mean(parl_seats, na.rm = TRUE) # Remove NA before computing the mean
+```
+
+## Packages and libraries
+
+The functions we've discussed so far, such as `sum()` and `mean()`, come from base R. These are pre-loaded functions available immediately upon starting R. However, many functions you'll encounter aren't part of base R but instead belong to specific packages that individuals or groups have developed. You can think of packages as collections of functions crafted to simplify certain tasks or to introduce new capabilities to R. For example, there's the `tidyverse` package, which I asked you to install before the class
+
+To install a package in R, you can use the `install.packages()` function, passing the name of the package in quotation marks (either single or double). I recommend doing this installation in the console since you don't need to save this step; it's a one-time action. However, every time you start your script or Quarto document, you'll need to load the package. To do this, use the `library()` function, providing the package name as an argument, but without the quotation marks.
+
+![](figures/packages.png)
+
+```{r}
+#| warning: false
+library(tidyverse)
+```
+
+## Dataframes and tibbles
+
+When processing data, we primarily interact with vectors through the manipulation of **dataframes** in R. Dataframes are two-dimensional structures that contain rows and columns. Each column is a vector, and each row is an observation. Dataframes are the primary data structure used for data manipulation, computation, and visualization in R. In this class, we'll work with a specific type of dataframe that comes from the `tidyverse` package called a **tibble**. Tibbles are a modern and enhanced version of dataframes that make them easier to print and manipulate.
+
+To understand what dataframes look like, let us continue with the results of the french elections. I manually create a tibble with the `tibble()` function with different variables about parliamentary groups
+
+```{r}
+left_coalition <- tibble(
+  party = c("Communists", "Greens", "LFI", "Socialists"),
+  leader = c("Chassaigne", "Chatelain", "Panot", "Vallaud"),
+  seats_2024 = c(17, 38, 72, 66),
+  seats_2022 = c(22, 21, 75, 31)
+)
+
+left_coalition
+```
+
+You see now that we have a new object in our Environment Pane with 4 observations and 4 variables. 
+
+Different functions are available to get an idea of the informations and shape of the dataframe, which are useful when we load an unknown dataset and we want to understand its structure, what are the observations and variables.
+
+```{r}
+glimpse(left_coalition) # Get a glimpse of your data
+colnames(left_coalition) # Retrieve column names of the dataframe
+summary(left_coalition) # Return a summary of the variables
+```
+
+If we want to access only one variable (one vector) of that dataframe, we use the `$` sign. This will return a vector of the values of this variable. 
+
+```{r}
+left_coalition$party # Select the party variable
+```
+
+You can also create new variables based on the existing ones. Here I create a new variable called `seats_change`by calculating the difference of seats between 2024 and 2022 for each party.
+
+```{r}
+left_coalition$seats_change <- left_coalition$seats_2024 - left_coalition$seats_2022
+```
+
+
+::: callout-note
+## Your turn !
+
+Create a new variable called `seats_share` that calculates the share of seats in 2024 for each party. The share of seats is calculated as the number of seats of the party divided by the total number of seats in the parliament multiplied by 100.
+
+<details>
+
+<summary>Solution. Click to expand!</summary>
+
+Solution:
+
+```{r}
+left_coalition$seats_share <- left_coalition$seats_2024/577*100
+left_coalition
+```
+
+</details>
+:::
+
+## Import and write data
+
+Up until now, we have been creating data manually for demonstration purposes. As we move forward, we will focus on analyzing real data. Every data analysis project starts with acquiring data. You can generate your own data through surveys, web scraping, or manual data coding (*primary data sources*). However, there are also many pre-existing datasets available for use (*secondary data sources*). These datasets are often provided by researchers, governments, NGOs, companies, international organizations, and more. I highly recommend checking out this [list](https://github.com/erikgahner/PolData) of political datasets curated by Erik Gahner Larsen. Throughout this course, we will use some of these established datasets in political science.
+
+### File formats, paths and R projects
+
+To analyze data in R, we first need to import it. While this might sound simple, it can be challenging for beginners. To read a file in R, we need to know two important things: the **file format** and the **path**.
+
+Data comes in various file formats, which are standardized ways of storing and organizing data in digital files. These formats dictate how information is encoded and structured, allowing different software programs to understand and interpret the data correctly. The most common format for data is `.csv` (comma-separated values). In political science, you will also encounter Stata (`.dta`) and SPSS (`.sav`) files. R uses different functions to read files depending on their format.
+
+Secondly, R needs to know where the data is located on your system. A "path" shows the position of a file or folder within your file system, detailing the series of directories and subdirectories leading to the file. There are two types of paths:
+
+-   The **absolute path** gives the complete location of a file or directory, beginning at the root of the file system. Examples include: /home/user/documents/myfile.txt for Unix-like systems, and `C:\Users\user\Documents\myfile.txt` for Windows.
+
+-   A **relative path** indicates the location of a file or directory in relation to the current working directory. For instance, data/mydata.csv points to a file named mydata.csv in the data subdirectory of the present directory.
+
+The **working directory** refers to the directory where R is currently operating. If you access files in R without providing an absolute path, it defaults to searching within this working directory.
+
+You can see your current working directory in R using the `getwd()` function. To set a new working directory, use the `setwd()` function, specifying the desired path as its argument.
+
+```{r}
+getwd()
+```
+
+Please note that using absolute paths in your code is considered a bad practice because it can make your code less usable for others. Instead, I recommend using R projects. An R project is a dedicated workspace for your R work, where you keep all your files, data, scripts, and output documents together. When you open an R project, it sets everything up so that your files are easy to find and your work is easier to share and reproduce.
+
+From the top left corner of RStudio, click on `File` and then select `New Project`. You'll then be given three options: to create a project in an existing directory, to create one in a new directory, or to check out a project from a version control repository like Git.
+
+If you choose an existing directory, navigate to that directory. If you opt for a new directory, you'll need to name your project and decide its save location on your computer. Once you finalize your choice by clicking `Create Project`, the working directory in RStudio will automatically be set to your project location. This means that any scripts, data files, or outputs you work on will be saved here by default, making them easier to find and reference later.
+
+Inside your project directory, you'll notice a file with an `.Rproj` extension, such as `MyProject.Rproj`. In the future, you can open this file to launch RStudio directly into this project, ensuring the working directory is already set. It's also advisable to set up specific folders within your project directory for different components like scripts, data, and figures. This keeps everything tidy and organized as your project expands.
+
+### Functions to import data in R
+
+There are different functions to import data into R.
+
+-   For CSV (Comma Separated Values) files, the base R function `read.csv()` is commonly used. However, within the tidyverse package suite, the readr package provides the `read_csv()` function, which tends to be faster and more versatile. The `read_csv2()` function is designed for CSV files using semicolons ; as field separators and commas , as decimal points, compared to `read_csv()`which assumes commas as field separators.
+
+-   Excel files can be read using the readxl package, which provides the `read_excel()` function. This function can read both `.xls` and `.xlsx` files.
+
+-   For SPSS data files, you can use the `haven` package. This package contains the function `read_sav()` for `.sav` files.
+
+-   Stata data files, or `.dta` files, can also be read using the haven package with the `read_dta()` function.
+
+All these functions enable you to read a file by specifying its path. Here, for example, I import a CSV file containing data on candidates for the 2024 legislative elections in France.
+
+```{r}
+#| warning: false
+library(tidyverse)
+
+french_candidates <- read_csv("data/2024_french_candidates.csv")
+
+glimpse(french_candidates)
+```
+
+### Export data
+
+Typically, we might want to save data to our disk after adding information, merging different datasets, and so on. This is useful for later reuse or to share the data with someone else. To achieve this, simply replace 'read' with 'write' in all the functions I've introduced previously. You'll also need to specify the name of the R object containing your data and the path where you wish to export the data.
+
+```{r}
+write_csv(french_candidates, "data/french_candidates2.csv")
+```
+
+## Going further
+
+### Naming things
+
+Note that I have written the names of objects with underscores. There are different conventions to write object names in R that you can discover [here](https://style.tidyverse.org/syntax.html#object-names). I personnaly use *snake case* which use lowercase letters and underscores to separate words.
+
+### Packages
+
+Rather than importing packages with `library()`, it is also possible to use the 
+ `::` operator such as :
+ 
+```{r}
+dplyr::glimpse(french_candidates)
+```
+
+It lets you reference a specific function from a package without loading the whole package. This is handy when two packages have functions with the same name, ensuring clarity in your code. It's also useful for one-off function uses, avoiding the need to load an entire package. This approach can make code clearer and sometimes faster by reducing loaded dependencies
+
+### Indexing
+
+When we manipulate vectors, we often want to access specific elements of them, which we call **indexing**, which is performed by using square brackets `[]`. You can index either by position or by name.
+
+When I write `leaders[3]`, I want the value of the third element of the `leaders vector`, this is indexing by position. But when I write `leaders[leaders == "Le Pen"]`, I index by name because I want the elements that have Le Pen as value.
+
+```{r}
+leaders
+
+leaders[4] # Get the third element of the vector
+leaders[-3] # Get everything but the third element of the vector
+leaders[c(1,4)] # Get the first and the fifth elements of the vector
+leaders[1:3] # Get elements from the first to the third
+leaders[leaders == "Le Pen"] # Which has Le Pen as value
+leaders[leaders != "Le Pen"] # Which has not Le Pen as value
+leaders[leaders %in% c("Le Pen", "Ciotti")]# Which has Le Pen or Ciotti
+leaders[!leaders %in% c("Le Pen", "Ciotti")]# Which has neither Le Pen nor Ciotti
+```
+
 
 ### Logical vectors
 
@@ -131,73 +373,7 @@ The evaluation of conditions can also be used to compare numeric values. For ins
 left_seats > far_right_seats
 ```
 
-### Indexing
-
-When we manipulate vectors, we often want to access specific elements of them, which we call **indexing**, which is performed by using square brackets `[]`. You can index either by position or by name. 
-
-When I write `leaders[3]`, I want the value of the third element of the `leaders vector`, this is indexing by position. But when I write `leaders[leaders == "Le Pen"]`, I index by name because I want the elements that have Le Pen as value.
-
-```{r}
-leaders
-
-leaders[4] # Get the third element of the vector
-leaders[-3] # Get everything but the third element of the vector
-leaders[c(1,4)] # Get the first and the fifth elements of the vector
-leaders[1:3] # Get elements from the first to the third
-leaders[leaders == "Le Pen"] # Which has Le Pen as value
-leaders[leaders != "Le Pen"] # Which has not Le Pen as value
-leaders[leaders %in% c("Le Pen", "Ciotti")]# Which has Le Pen or Ciotti
-leaders[!leaders %in% c("Le Pen", "Ciotti")]# Which has neither Le Pen nor Ciotti
-```
-
-::: callout-note
-## Your turn !
-
-Create a vector that contains the names of the leaders of the Macron's party : Attal, Fesneau, Marcangeli. Then, add this vector to the `leaders` vector and store the result in a new object `all_leaders`. Find two different ways to then index only the names of these leaders from the all_leaders object.
-
-<details>
-
-<summary>Solution. Click to expand!</summary>
-
-Solution:
-
-```{r}
-macron_leaders <- c("Attal", "Fesneau", "Marcangeli")
-all_leaders <- c(leaders, macron_leaders)
-
-all_leaders[c(5,6,7)]
-all_leaders[all_leaders %in% c("Attal", "Fesneau", "Marcangeli")]
-```
-
-</details>
-:::
-
-## Functions
-
-To manipulate vectors and conduct operations on them, we use **functions**. A function is a reusable block of code that performs a specific task, it takes several input values called *arguments* and produce an *output*.
-
-Let's say you want to know how many seats parliamentary groups have on average in the French parliament. You could calculate the sum of the seats and dividing them by their number. 
-
-```{r}
-(communists_seats + greens_seats + socialists_seats + lfi_seats + renaissance_seats + modem_seats + horizon_seats + conservatives_seats + ciotti_seats + rn_seats + none_seats + liot_seats)/12
-```
-
-But you could also just the `mean()` function that exists in R and that takes a vector of numbers as argument.
-
-```{r}
-parl_seats <- c(communists_seats, greens_seats, socialists_seats, lfi_seats, renaissance_seats, modem_seats, horizon_seats, conservatives_seats, ciotti_seats, rn_seats, none_seats, liot_seats)
-
-mean(parl_seats) # Compute the mean of the vector parl_seats
-
-```
-
-It is also easy to use functions to compute the maximum, minimum, and sum of a vector of numbers.
-
-```{r}
-max(parl_seats) # Compute the maximum of the vector parl_seats
-min(parl_seats) # Compute the minimum of the vector parl_seats
-sum(parl_seats) # Compute the sum of the vector parl_seats
-```
+### More on vectors and functions
 
 In R, functions often expect inputs of specific types. If you pass a character vector containing numeric numbers as strings to a function that expects a numeric vector, it may not behave as expected. As shown below, the function returns a `NA` which means Not available/applicable. When R encounters something it doesn't understand, it returns an error message with indications about the problem.
 
@@ -208,10 +384,10 @@ parl_seats_chr
 mean(parl_seats_chr) # This returns NA
 ```
 
-Similarly, computing the sum of the `parl_seats_chr` vector will work as expected but trying to calculate the sum of our `leaders` character vector composed of leaders's names will not give a meaningful result.
+Similarly, computing the sum of the `parl_seats_chr` vector does not work: even though its values look like numbers, they are stored as text. Trying to calculate the sum of our `leaders` character vector composed of leaders' names fails for the same reason.
 
 ```{r error=TRUE}
-sum(parl_seats_chr)
+sum(parl_seats_chr) # This is an error
 sum(leaders) # This is an error
 ```
 
@@ -247,42 +423,7 @@ compute_mean <- function(x) {
 compute_mean(parl_seats)
 ```
 
-## Missing values
-
-In R, a missing value is represented by the symbol `NA`, which stands for "Not Available." Missing values can arise for a variety of reasons, such as data not being observed or recorded, errors in data collection, or intentional omissions. Understanding and handling missing values is crucial because they can influence the results of your analysis or even cause some functions to return errors. For instance, imagine I haven't found any information about the number of seats one parliamentary group get, but I want to retain this information in my vector. So, I add an NA to it.
-
-```{r}
-parl_seats <- c(parl_seats, NA)
-parl_seats
-```
-
-When analyzing data, it's not uncommon to encounter NA values, and it's important to be aware of them. To check if a vector contains NA values, you can use the `is.na()` function. This function returns a logical vector indicating whether each value is NA (`TRUE`) or not (`FALSE`).
-
-```{r}
-is.na(parl_seats) # Check which values of a vector are NAs
-```
-
-This is important because certain functions will not operate properly if there are NA values in your data. For instance, the `mean()` function will return NA if the data contains any NA values
-
-```{r}
-mean(parl_seats)
-```
-
-To deal with `NA`, the `mean()` function has a `na.rm`
-
-```{r}
-mean(parl_seats, na.rm = TRUE) # Remove NA before computing the mean
-```
-
-## Packages and libraries
-
-The functions we've discussed so far, such as `sum()` and `mean()`, come from base R. These are pre-loaded functions available immediately upon starting R. However, many functions you'll encounter aren't part of base R but instead belong to specific packages that individuals or groups have developed. You can think of packages as collections of functions crafted to simplify certain tasks or to introduce new capabilities to R. For example, there's the `tidyverse` package, which I asked you to install before the class
-
-To install a package in R, you can use the `install.packages()` function, passing the name of the package in quotation marks (either single or double). I recommend doing this installation in the console since you don't need to save this step; it's a one-time action. However, every time you start your script or Quarto document, you'll need to load the package. To do this, use the `library()` function, providing the package name as an argument, but without the quotation marks.
-
-```{r}
-library(tidyverse)
-```
+#### More on the tidyverse
 
 The `tidyverse` isn't just a single package but rather a meta-package, meaning it bundles together several other packages, each with its own set of functions. For example, one of these bundled packages is `stringr`, which offers tools for manipulating character vectors. Since `stringr` is part of the `tidyverse`, if you've already loaded the `tidyverse`, there's no need to load `stringr` separately. With it, you can perform tasks like converting strings in a vector to uppercase or lowercase.
 
@@ -301,150 +442,5 @@ parties <- c("Communists", "Greens", "LFI", "Socialists", "Ciotti's party", "Nat
 str_c(leaders, " is the parliamentary leader of ", parties)
 ```
 
-## Dataframes and tibbles
-
-When processing data, we primarily interact with vectors through the manipulation of **dataframes** in R. Dataframes are two-dimensional structures that contain rows and columns. Each column is a vector, and each row is an observation. Dataframes are the primary data structure used for data manipulation, computation, and visualization in R. In this class, we'll work with a specific type of dataframe that comes from the `tidyverse` package called a **tibble**. Tibbles are a modern and enhanced version of dataframes that make them easier to print and manipulate.
-
-However, we primarily interact with vectors through the manipulation of dataframes in R. Dataframes are composed of combinations of vectors, which can vary in types. Dataframes are two-dimensionals, with columns (or variables) and rows (or observations). This is what we use for manipulating data, computing statistics and visualization. In this class, we will work with a specific form of dataframe coming from the `tidyverse` packages that is called a [`tibble`](https://posit.co/blog/tibble-1-0-0/#:~:text=Tibbles%20vs%20data%20frames,to%20work%20with%20large%20data). Tibbles make dataframes easier to print and manipulate.
-
-To understand what dataframes look like, let us continue with the results of the spanish elections. I manually create a tibble with the `tibble()` function with different variables about different parties, their seats, their vote share and their candidate.
-
-```{r}
-left_coalition <- tibble(
-  party = c("Communists", "Greens", "LFI", "Socialists"),
-  leader = c("Chassaigne", "Chatelain", "Panot", "Vallaud"),
-  seats_2024 = c(17, 38, 72, 66),
-  seats_2022 = c(22, 21, 75, 31)
-)
-```
-
-You see now that we have a new object in our Environment Pane with 3 observations and 5 variables. If we want to access only one variable (one vector) of that dataframe, we use the `$` sign. This will return a vector of the values of this variable. You can also get the same result by indicating the position of the column inside `[[]]`.
-
-```{r}
-left_coalition$party # Select the party variable
-left_coalition[[1]] # Double brackets here because not atomic vectors anymore but nested structure
-```
-
-We can also use indexing to get the value of specific cell.
-
-```{r}
-left_coalition$leader[4] # Get the row 4 of the candidate variable
-left_coalition[4, 1] # get the value of the row 4, column 1
-```
-
-Different functions are availble to get an idea of the informations and shape of the dataframe, which are useful when we load an unknown dataset and we want to understand its structure, what are the observations and variables.
-
-```{r}
-head(left_coalition, 1) # Return x first rows of an object
-tail(left_coalition, 2) # Return x last rows of an object
-dplyr::glimpse(left_coalition) # Get a glimpse of your data
-colnames(left_coalition) # Retrieve column names of the dataframe
-nrow(left_coalition) # Return the number of rows present in the dataframe
-ncol(left_coalition) # Return the number of columns present in the dataframe
-summary(left_coalition) # Return a summary of the variables
-```
-
-You can also create new variables based on the existing ones. Here I create a new variable called `seats_share` by calculating the share of seats each party has in the parliament (dividing their seats by the total number of seats and multiplying by 100).
-
-```{r}
-left_coalition$seats_share <- left_coalition$seats_2024/577*100
-```
-
-::: callout-note
-## Your turn !
-
-Create a new variable called `seats_change` that calculates the difference of seats between 2024 and 2022 for each party.
-<details>
-
-<summary>Solution. Click to expand!</summary>
-
-Solution:
-
-```{r}
-left_coalition$seats_change <- left_coalition$seats_2024 - left_coalition$seats_2022
-
-```
-
-</details>
-:::
 
 
-## Import and write data
-
-### Getting data
-
-Up until now, we have been creating data manually for demonstration purposes. As we move forward, we will focus on analyzing real data. Every data analysis project starts with acquiring data. You can generate your own data through surveys, web scraping, or manual data coding (*primary data sources*). However, there are also many pre-existing datasets available for use (*secondary data sources*). These datasets are often provided by researchers, governments, NGOs, companies, international organizations, and more. I highly recommend checking out this [list](https://github.com/erikgahner/PolData) of political datasets curated by Erik Gahner Larsen. Throughout this course, we will use some of these established datasets in political science.
-
-### Read data into R
-
-#### File formats, paths and R projects
-
-To analyze data in R, we first need to import it. While this might sound simple, it can be challenging for beginners. To read a file in R, we need to know two important things: the **file format** and the **path**.
-
-Data comes in various file formats, which are standardized ways of storing and organizing data in digital files. These formats dictate how information is encoded and structured, allowing different software programs to understand and interpret the data correctly. The most common format for data is `.csv` (comma-separated values). In political science, you will also encounter Stata (`.dta`) and SPSS (`.sav`) files. R uses different functions to read files depending on their format.
-
-Secondly, R needs to know where the data is located on your system. A "path" shows the position of a file or folder within your file system, detailing the series of directories and subdirectories leading to the file. There are two types of paths:
-
--   The **absolute path** gives the complete location of a file or directory, beginning at the root of the file system. Examples include: /home/user/documents/myfile.txt for Unix-like systems, and C:\Users\user\Documents\myfile.txt for Windows.
-
--   A **relative path** indicates the location of a file or directory in relation to the current working directory. For instance, data/mydata.csv points to a file named mydata.csv in the data subdirectory of the present directory.
-
-The **working directory** refers to the directory where R is currently operating. If you access files in R without providing an absolute path, it defaults to searching within this working directory.
-
-You can see your current working directory in R using the `getwd()` function. To set a new working directory, use the `setwd()` function, specifying the desired path as its argument.
-
-```{r}
-getwd()
-```
-
-Please note that using absolute paths in your code is considered a bad practice because it can make your code less usable for others. Instead, I recommend using R projects. An R project is a dedicated workspace for your R work, where you keep all your files, data, scripts, and output documents together. When you open an R project, it sets everything up so that your files are easy to find and your work is easier to share and reproduce.
-
-From the top left corner of RStudio, click on `File` and then select `New Project`. You'll then be given three options: to create a project in an existing directory, to create one in a new directory, or to check out a project from a version control repository like Git.
-
-If you choose an existing directory, navigate to that directory. If you opt for a new directory, you'll need to name your project and decide its save location on your computer. Once you finalize your choice by clicking `Create Project`, the working directory in RStudio will automatically be set to your project location. This means that any scripts, data files, or outputs you work on will be saved here by default, making them easier to find and reference later.
-
-Inside your project directory, you'll notice a file with an `.Rproj` extension, such as `MyProject.Rproj`. In the future, you can open this file to launch RStudio directly into this project, ensuring the working directory is already set. It's also advisable to set up specific folders within your project directory for different components like scripts, data, and figures. This keeps everything tidy and organized as your project expands.
-
-### Functions to import data in R
-
-There are different functions to import data into R.
-
--   For CSV (Comma Separated Values) files, the base R function `read.csv()` is commonly used. However, within the tidyverse package suite, the readr package provides the `read_csv()` function, which tends to be faster and more versatile. The `read_csv2()` function is designed for CSV files using semicolons ; as field separators and commas , as decimal points, compared to `read_csv()`which assumes commas as field separators.
-
--   Excel files can be read using the readxl package, which provides the `read_excel()` function. This function can read both `.xls` and `.xlsx` files.
-
--   For SPSS data files, you can use the `haven` package. This package contains the function `read_sav()` for `.sav` files.
-
--   Stata data files, or `.dta` files, can also be read using the haven package with the `read_dta()` function.
-
--   If you're working with R's native data format, .RData or .RDS, you can use the load() function for .RData files and the readRDS() function for .RDS files.
-
--   Base R To import data in R, we will use the R base provides several functions to import data such as `read.csv()`. I personnaly prefer using the `readr` package which is part of the tidyverse. To read a csv file, you will need the `read_csv()` function.
-
-All these functions enable you to read a file by specifying its path or its URL on the web. Here, for example, I import a CSV file containing data on candidates for the 2024 legislative elections in France.
-
-```{r}
-library(tidyverse)
-
-french_candidates <- read_csv("data/2024_french_candidates.csv")
-
-glimpse(french_candidates)
-```
-
-### Export data
-
-Typically, we might want to save data to our disk after adding information, merging different datasets, and so on. This is useful for later reuse or to share the data with someone else. To achieve this, simply replace 'read' with 'write' in all the functions I've introduced previously. You'll also need to specify the name of the R object containing your data and the path where you wish to export the data.
-
-```{r}
-write_csv(french_candidates, "data/french_candidates2.csv")
-```
-
-## Going further
-
-### Naming things
-
-Note that I have written the names of objects with underscores. There are different conventions to write object names in R that you can discover [here](https://style.tidyverse.org/syntax.html#object-names). I personnaly use *snake case* which use lowercase letters and underscores to separate words.
-
-### Packages
-
-Note above that I have used, the `::` operator. It lets you reference a specific function from a package without loading the whole package. This is handy when two packages have functions with the same name, ensuring clarity in your code. It's also useful for one-off function uses, avoiding the need to load an entire package. This approach can make code clearer and sometimes faster by reducing loaded dependencies

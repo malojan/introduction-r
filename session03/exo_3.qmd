@@ -1,0 +1,21 @@
+---
+title : "Exercise 3"
+author: "Malo Jan"
+format: pdf
+editor_options: 
+  chunk_output_type: inline
+---
+
+This is the third exercise of the course. Here, the goal is to learn about to explore and communicate information about the data through visualizations.
+
+1.  As with the previous exercises, you will need to create a new R project and a new quarto document. Save the quarto document in the same folder as \`lastname_ex3.qmd.
+
+2.  Then, Download and import the [Chapell Hill Expert Survey trend file](https://www.chesdata.eu/ches-europe) into Rstudio. You can also just copy and paste the dataset that was used during the session into your exercise folder.
+
+3.  Then, look at the codebook and pick up a given issue that you are interested in : EU integration, immigration, environment, international relations, redistributions etc.
+
+4.  Using graphs, provide a brief analysis of variation in the position or salience of this issue across different variables such as party families, year or country. Feel free to restrict the analysis to a subset of countries or years. Be careful as some variables are only available for some years. You should find a way to use at least the following geoms :`geom_histogram()`, `geom_point()`, `geom_boxplot()` and facetting with `facet_wrap(~ )`
+
+5.  Optional : Try to polish the graph by adding titles, labels, colors, themes etc.
+
+6.  As always, convert the quarto document into a pdf or word document and submit it on the Moodle platform.
