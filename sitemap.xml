@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/index.html</loc>
-    <lastmod>2026-10-01T11:10:48.614Z</lastmod>
+    <loc>https://malojan.github.io/introduction-r/index.html</loc>
+    <lastmod>2026-10-01T11:35:59.356Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/setup.html</loc>
+    <loc>https://malojan.github.io/introduction-r/setup.html</loc>
     <lastmod>2026-10-01T10:21:39.385Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session01/workflow.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session01/workflow.html</loc>
     <lastmod>2024-09-05T12:40:11.000Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session01/basics.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session01/basics.html</loc>
     <lastmod>2026-10-01T11:19:17.018Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session01/help.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session01/help.html</loc>
     <lastmod>2024-09-05T12:45:55.000Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session02/0201_manipulate.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session02/0201_manipulate.html</loc>
     <lastmod>2026-10-01T10:05:14.697Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session02/0202_reshape.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session02/0202_reshape.html</loc>
     <lastmod>2026-10-01T10:05:14.698Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session03/03_dataviz.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session03/03_dataviz.html</loc>
     <lastmod>2026-10-01T10:05:14.699Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session04/04_relationships.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session04/04_relationships.html</loc>
     <lastmod>2026-10-01T11:18:01.068Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session05/correlation_regression.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session05/correlation_regression.html</loc>
     <lastmod>2026-10-01T11:18:19.945Z</lastmod>
   </url>
   <url>
-    <loc>https://malojan.github.io/2024_intro_r/session06/06_modelling.html</loc>
+    <loc>https://malojan.github.io/introduction-r/session06/06_modelling.html</loc>
     <lastmod>2026-10-01T11:18:41.094Z</lastmod>
   </url>
 </urlset>

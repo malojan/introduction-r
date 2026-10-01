@@ -1,1 +1,1 @@
-Sitemap: https://malojan.github.io/2024_intro_r/sitemap.xml
+Sitemap: https://malojan.github.io/introduction-r/sitemap.xml
