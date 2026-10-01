@@ -53,8 +53,7 @@ format:
     code-link: true
     citations-hover: true
     footnotes-hover: true
-    embed-resources: true
-    self-contained-math: true
+    embed-resources: false
     grid: 
       sidebar-width: 300px
       margin-width: 300px
